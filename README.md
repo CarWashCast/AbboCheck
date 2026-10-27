@@ -43,3 +43,9 @@ Abonnementen worden op dit moment lokaal in de browser/app opgeslagen. Ze synchr
 4. Controleer op het toestel of meldingen voor AbonnementCheck zijn toegestaan.
 
 Let op: Android-versies en energiebesparingsinstellingen kunnen de precieze bezorging beïnvloeden. De meldingsplanner wordt na het toevoegen/bewerken, importeren of verwijderen van abonnementen bijgewerkt. Meldingen die al in het verleden liggen worden niet ingepland.
+
+
+## Lettertype
+De interface gebruikt Manrope met normale tekst (400) en vetgedrukte koppen/labels. Het lettertype is als lokale dependency opgenomen via `@fontsource-variable/manrope`. Bij `npm install` en `npm run build` neemt Vite de benodigde fontbestanden mee in `dist`; de uiteindelijke app is daardoor niet afhankelijk van een Google Fonts-request.
+
+Voor de GitHub Pages-publicatie die rechtstreeks vanaf de repository-root wordt geserveerd, wordt de bundel niet automatisch gebouwd. Om ook de website met het lokaal gebundelde font te publiceren, moet je `dist` publiceren via een build workflow of de gegenereerde `dist`-bestanden publiceren.
