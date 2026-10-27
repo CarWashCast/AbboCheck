@@ -1,0 +1,11 @@
+{
+  "name": "AbonnementCheck",
+  "short_name": "AbboCheck",
+  "description": "Houd abonnementen, kosten en opzegdeadlines bij.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f7f8",
+  "theme_color": "#f36b35",
+  "lang": "nl",
+  "icons": []
+}

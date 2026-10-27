@@ -1,0 +1,8 @@
+{
+  "appId": "nl.abonnementcheck.app",
+  "appName": "AbonnementCheck",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
