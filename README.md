@@ -21,6 +21,23 @@ Open `index.html` in een moderne browser. Voor service-worker/PWA-functies is ee
 ## Op GitHub Pages zetten
 Upload `index.html` en `manifest.webmanifest` naar de root van je repository. Stel GitHub Pages in op branch `main`, map `/(root)`.
 
+## APK downloaden via GitHub
+
+De workflow **Android APK** bouwt automatisch een installeerbare test-APK bij elke push naar `main`. Je kunt ook handmatig bouwen:
+
+1. Open [Actions → Android APK](https://github.com/CarWashCast/AbboCheck/actions/workflows/android-apk.yml) en log in op GitHub.
+2. Kies **Run workflow** → branch **main** → **Run workflow** (of open de nieuwste automatische run).
+3. Wacht tot **Build AbboCheck APK** groen is, meestal enkele minuten.
+4. Open die run en download onder **Artifacts** het ZIP-bestand **AbboCheck-APK-…**.
+5. Pak het ZIP-bestand uit, zet **AbboCheck.apk** op je Android-telefoon en open het.
+6. Sta indien gevraagd **Onbekende apps installeren** toe voor de app waarmee je het APK-bestand opent.
+
+Android 6 of nieuwer is nodig. De download blijft 14 dagen beschikbaar; start daarna opnieuw een build. `SHA256SUMS.txt` bevat de checksum van het APK-bestand.
+
+Dit is een debug-ondertekende testversie, geschikt om zelf te installeren. Er zijn geen extra GitHub-secrets nodig. De workflow bewaart de testondertekeningssleutel in de Actions-cache, zodat volgende builds normaal als update kunnen worden geïnstalleerd. Als GitHub deze cache verwijdert, kan opnieuw installeren nodig zijn. **Exporteer vóór verwijderen altijd je gegevens als back-up**; verwijderen wist de lokale appgegevens. Voor een Play Store-release is een eigen, veilig beheerde releasesleutel nodig.
+
+De workflow gebruikt `npm ci` met de vastgelegde lockfile, Node.js 22, Java 21 en Android SDK 35. Het Android-project wordt tijdens de build gegenereerd en krijgt het AbboCheck-logo als launchericoon.
+
 ## Android-app voorbereiden
 Deze map bevat `package.json` en `capacitor.config.json` als startpunt voor een Android-build met Capacitor. Omdat de Capacitor `webDir` op `dist` staat, voer je vanuit deze map uit:
 

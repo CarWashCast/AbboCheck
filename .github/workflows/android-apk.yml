@@ -1,0 +1,88 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Keep signing-key cache creation and subsequent builds in order.
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build AbboCheck APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Restore test signing key
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.android/debug.keystore
+          key: abbocheck-debug-keystore-v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Prepare Android project
+        run: |
+          npx --no-install cap add android
+          npx --no-install cap sync android
+          python3 scripts/android-icons.py
+
+      - name: Install Android SDK packages
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+
+      - name: Build test APK
+        working-directory: android
+        run: bash gradlew --no-daemon --max-workers=2 assembleDebug
+
+      - name: Verify and package APK
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose android/app/build/outputs/apk/debug/app-debug.apk
+          mkdir -p apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk apk/AbboCheck.apk
+          cd apk
+          sha256sum AbboCheck.apk > SHA256SUMS.txt
+
+      - name: Upload downloadable APK
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: AbboCheck-APK-${{ github.run_number }}
+          path: apk/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show installation instructions
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          ## AbboCheck is klaar om te installeren
+          Download hieronder bij **Artifacts** het bestand **AbboCheck-APK**.
+          Pak het ZIP-bestand uit en open **AbboCheck.apk** op je Android-telefoon.
+          Geef indien nodig toestemming voor **Onbekende apps installeren**.
+
+          Dit is een ondertekende test-APK, geen Play Store-release.
+          De APK blijft 14 dagen beschikbaar. Je kunt altijd opnieuw bouwen via **Run workflow**.
+          SUMMARY
