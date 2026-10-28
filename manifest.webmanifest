@@ -1,5 +1,5 @@
 {
-  "name": "AbonnementCheck",
+  "name": "AbboCheck",
   "short_name": "AbboCheck",
   "description": "Houd abonnementen, kosten en opzegdeadlines bij.",
   "start_url": "./index.html",

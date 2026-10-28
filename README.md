@@ -1,4 +1,4 @@
-# AbonnementCheck — appcode
+# AbboCheck — appcode
 
 Dit is de werkende webapp-code, niet de interactieve ontwerp-preview.
 
@@ -38,9 +38,9 @@ Abonnementen worden op dit moment lokaal in de browser/app opgeslagen. Ze synchr
 
 ## Meldingen testen
 1. Bouw en installeer de Android-app via Android Studio.
-2. Open AbonnementCheck → Instellingen → **Meldingen inschakelen** en geef Android-toestemming.
+2. Open AbboCheck → Instellingen → **Meldingen inschakelen** en geef Android-toestemming.
 3. Voeg een actief abonnement toe met een opzegdeadline die minstens 8 dagen in de toekomst ligt. De app plant meldingen om 09:00 uur, 7 dagen en 1 dag vóór de deadline.
-4. Controleer op het toestel of meldingen voor AbonnementCheck zijn toegestaan.
+4. Controleer op het toestel of meldingen voor AbboCheck zijn toegestaan.
 
 Let op: Android-versies en energiebesparingsinstellingen kunnen de precieze bezorging beïnvloeden. De meldingsplanner wordt na het toevoegen/bewerken, importeren of verwijderen van abonnementen bijgewerkt. Meldingen die al in het verleden liggen worden niet ingepland.
 

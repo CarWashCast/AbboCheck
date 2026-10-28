@@ -34,7 +34,7 @@ async function sync(state) {
   const permission = await LocalNotifications.checkPermissions();
   if (permission.display !== 'granted') return;
 
-  // Cancel only notifications owned by AbonnementCheck.
+  // Cancel only notifications owned by AbboCheck.
   const pending = await LocalNotifications.getPending();
   const ours = (pending.notifications || [])
     .filter(n => Number(n.id) >= ID_BASE && Number(n.id) < ID_BASE + ID_RANGE)

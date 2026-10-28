@@ -5,86 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f36b35">
 <meta name="description" content="Houd abonnementen, kosten en opzegdeadlines overzichtelijk bij.">
-<title>AbonnementCheck</title>
+<title>AbboCheck</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--accent:#f36b35;--accent-soft:#fff0e9;--bg:#f7f7f8;--surface:#fff;--text:#202124;--muted:#777b82;--line:#e9e9ec;--danger:#c94242;--success:#27845d;--shadow:0 8px 28px rgba(28,28,32,.06);--radius:20px}
+:root{--accent:#f36b35;--accent-soft:#fff0e9;--bg:#f5f5f7;--surface:#fff;--text:#1d1d1f;--muted:#6e6e73;--line:#e8e8ed;--danger:#b83232;--success:#237a51;--shadow:0 4px 24px rgba(0,0,0,.035);--radius:24px}
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-body{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.app{max-width:760px;margin:0 auto;min-height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 20px 14px;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo-img{width:44px;height:44px;object-fit:contain;border-radius:13px;flex-shrink:0}
-.brand-title{font-size:18px;font-weight:780;letter-spacing:-.5px}
-.brand-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);border-radius:14px;display:grid;place-items:center;color:var(--text);font-size:19px}
-main{padding:4px 18px 24px}
-.page{display:none}.page.active{display:block}
-.eyebrow{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:10px 2px}
-h1{font-size:29px;letter-spacing:-1.1px;line-height:1.12;margin:4px 2px 8px}
-.lead{font-size:14px;line-height:1.5;color:var(--muted);margin:0 2px 20px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
-.hero{background:var(--accent);color:white;border:0;position:relative;overflow:hidden;padding:22px}
-.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;border:28px solid rgba(255,255,255,.12);right:-54px;top:-76px}
-.hero-label{font-size:13px;opacity:.88;font-weight:600}
-.hero-amount{font-size:38px;font-weight:800;letter-spacing:-1.6px;margin:7px 0 4px}
-.hero-foot{font-size:12px;opacity:.88}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{padding:16px}.stat-label{color:var(--muted);font-size:12px}.stat-value{font-size:23px;font-weight:780;letter-spacing:-.6px;margin-top:8px}.stat-note{font-size:11px;color:var(--muted);margin-top:3px}
-.section-head{display:flex;align-items:center;justify-content:space-between;margin:24px 2px 12px;gap:10px}
-.section-head h2{font-size:17px;margin:0;letter-spacing:-.4px}
-.text-btn{border:0;background:transparent;color:var(--accent);font-weight:750;padding:8px 0}
-.alert{display:flex;gap:12px;align-items:flex-start;border:1px solid #f5d8c9;background:var(--accent-soft);border-radius:16px;padding:14px;margin-bottom:10px}
-.alert-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0}
-.alert strong{font-size:13px;display:block;margin-bottom:4px}.alert p{font-size:12px;line-height:1.45;margin:0;color:var(--muted)}
-.sub-list{display:flex;flex-direction:column;gap:10px}
-.sub-row{display:flex;align-items:center;gap:12px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:17px}
-.sub-icon{width:46px;height:46px;border-radius:15px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:16px;flex-shrink:0}
-.sub-info{min-width:0;flex:1}.sub-name{display:block;font-weight:750;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub-meta{display:block;font-size:12px;color:var(--muted);margin-top:5px;line-height:1.4}.sub-price{text-align:right;font-weight:800;font-size:14px;white-space:nowrap}.sub-price small{display:block;font-size:10px;font-weight:500;color:var(--muted);margin-top:4px}
-.empty{padding:30px 18px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}
-.empty b{display:block;color:var(--text);font-size:15px;margin-bottom:5px}
-.primary{border:0;background:var(--accent);color:white;border-radius:14px;padding:13px 17px;font-weight:750;box-shadow:0 5px 13px color-mix(in srgb,var(--accent) 22%,transparent)}
-.secondary{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:14px;padding:12px 15px;font-weight:700}
-.danger-btn{border:1px solid #f1caca;background:#fff7f7;color:var(--danger);border-radius:12px;padding:10px 12px;font-weight:700}
-.full{width:100%}
-.search{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--surface);outline:none;margin-bottom:12px}
-.search:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%,transparent);outline:none}
-.filter-row{display:flex;gap:8px;overflow:auto;padding-bottom:4px;margin-bottom:12px}
-.filter{border:1px solid var(--line);border-radius:99px;padding:8px 13px;background:var(--surface);color:var(--muted);font-size:12px;white-space:nowrap}
-.filter.active{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 28%,white);font-weight:750}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,760px);padding:10px 18px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--line);z-index:10}
-.nav-btn{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:700;padding:4px 0}
-.nav-btn .nav-icon{font-size:20px;line-height:1.1}.nav-btn.active{color:var(--accent)}
-.nav-add{width:49px;height:45px;border-radius:16px;background:var(--accent);color:#fff;border:0;font-size:27px;line-height:1;box-shadow:0 6px 15px color-mix(in srgb,var(--accent) 28%,transparent);align-self:center;justify-self:center}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}.field.fullspan{grid-column:1/-1}.field label{font-size:12px;font-weight:750;color:var(--muted)}
-.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);min-width:0}
-.help{font-size:11px;color:var(--muted);line-height:1.45;margin-top:-3px}
-.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,20,24,.42);z-index:20;align-items:flex-end;justify-content:center;padding:12px}
-.modal-backdrop.open{display:flex}
-.modal{width:min(100%,600px);max-height:92vh;overflow:auto;background:var(--bg);border-radius:24px 24px 18px 18px;padding:20px;box-shadow:0 20px 80px rgba(0,0,0,.2)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h2{font-size:20px;margin:0}
-.modal-close{border:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;width:36px;height:36px;font-size:20px}
-.actions{display:flex;gap:10px;margin-top:8px}.actions>*{flex:1}
-.setting-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border-bottom:0}.setting-title{font-size:14px;font-weight:750}.setting-desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
-.theme-options{display:flex;gap:9px;flex-wrap:wrap}.theme-swatch{width:35px;height:35px;border:3px solid var(--surface);outline:1px solid var(--line);border-radius:50%;padding:0}.theme-swatch.selected{outline:2px solid var(--text)}
-.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#222;color:white;border-radius:12px;padding:12px 16px;font-size:13px;z-index:50;box-shadow:var(--shadow);display:none;max-width:90%;text-align:center}
-.toast.show{display:block}
-.detail-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}.detail-top .sub-icon{width:58px;height:58px;font-size:20px}
-.small-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:750}
-.detail-value{font-size:24px;font-weight:800;margin:4px 0 14px}
-@media(min-width:620px){main{padding:8px 26px 30px}.topbar{padding:25px 28px 18px}.hero-amount{font-size:43px}.modal-backdrop{align-items:center}.modal{border-radius:24px}.bottom-nav{border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0}}
-@media(max-width:380px){h1{font-size:26px}.form-grid{grid-template-columns:1fr}.field.fullspan{grid-column:auto}.hero-amount{font-size:34px}.stat-value{font-size:21px}}
+html{color-scheme:light;background:var(--bg)}
+body{margin:0;min-height:100vh;padding-bottom:calc(116px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 50% 0,white,transparent 650px),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button{transition:background .18s,box-shadow .18s,transform .18s}button:active{transform:scale(.98)}button:focus-visible{outline:3px solid var(--accent);outline-offset:4px}button,input,select{touch-action:manipulation}
+.app{max-width:880px;margin:auto;min-height:100vh}.topbar{display:flex;justify-content:space-between;align-items:center;padding:32px 36px 34px;gap:16px}.brand{display:flex;align-items:center;gap:12px}.logo-img{width:40px;height:40px;object-fit:contain;border-radius:12px}.brand-title{font-size:16px;font-weight:650;letter-spacing:-.5px}.brand-sub{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.1px}
+.icon-btn{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.8);color:var(--muted)}svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:block}
+main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation:appear .3s ease-out}.eyebrow{font-size:10px;font-weight:650;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}h1{font-size:clamp(34px,5.5vw,46px);font-weight:650;letter-spacing:-1.9px;line-height:1.08;margin:0 0 12px}.lead{font-size:15px;line-height:1.6;color:var(--muted);margin:0 0 32px;letter-spacing:-.2px}
+.card{background:var(--surface);border:1px solid rgba(0,0,0,.045);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:14px}.hero{position:relative;overflow:hidden;padding:32px;background:linear-gradient(125deg,#25262a,#111114);color:white;border:0;box-shadow:0 16px 36px -20px rgba(0,0,0,.45)}.hero:after{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-110px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 45%,transparent),transparent 70%);pointer-events:none}.hero-label{font-size:12px;font-weight:500;color:#c6c6cb;letter-spacing:.2px}.hero-amount{font-size:clamp(44px,8vw,60px);font-weight:550;letter-spacing:-2.8px;line-height:1.2;margin:16px 0 20px;font-variant-numeric:tabular-nums}.hero-foot{font-size:12px;color:#b8b8c0;line-height:1.6;border-top:1px solid #ffffff1c;padding-top:18px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.stat{padding:23px 24px}.stat-label{font-size:12px;color:var(--muted)}.stat-value{font-size:30px;font-weight:600;letter-spacing:-1px;margin-top:12px;font-variant-numeric:tabular-nums}.stat-note{font-size:11px;color:var(--muted);margin-top:6px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:30px 2px 14px}.section-head h2{font-size:18px;font-weight:650;letter-spacing:-.6px;margin:0}.text-btn{border:0;background:transparent;color:var(--accent);font-size:12px;font-weight:600;padding:10px 0}
+.alert{display:flex;align-items:flex-start;gap:12px;border:1px solid color-mix(in srgb,var(--accent) 15%,white);background:color-mix(in srgb,var(--accent-soft) 55%,white);border-radius:18px;padding:18px;margin-bottom:10px}.alert-dot{width:6px;height:6px;flex-shrink:0;background:var(--accent);border-radius:50%;margin-top:5px}.alert strong{display:block;font-size:13px;font-weight:600;margin-bottom:6px}.alert p{font-size:12px;line-height:1.6;margin:0;color:var(--muted)}
+.sub-list{display:flex;flex-direction:column;gap:8px}.sub-row{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--surface);border:1px solid rgba(0,0,0,.04);border-radius:18px}.sub-row:hover{background:#fafafa;box-shadow:0 4px 16px #00000005}.sub-icon{width:44px;height:44px;display:grid;place-items:center;flex-shrink:0;border-radius:14px;background:color-mix(in srgb,var(--accent-soft) 60%,#f5f5f7);color:var(--accent);font-weight:650;font-size:17px}.sub-info{flex:1;min-width:0}.sub-name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;font-weight:600;letter-spacing:-.2px}.sub-meta{display:block;font-size:11px;color:var(--muted);line-height:1.5;margin-top:5px}.sub-price{font-size:15px;font-weight:600;letter-spacing:-.4px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.sub-price small{display:block;font-size:10px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:5px}
+.empty{padding:30px 22px;text-align:center;font-size:13px;color:var(--muted);line-height:1.7;box-shadow:none}.empty b{display:block;color:var(--text);font-size:15px;font-weight:600;margin-bottom:5px}.primary,.secondary{border-radius:12px;padding:13px 18px;font-size:13px;font-weight:600}.primary{border:0;background:var(--accent);color:white;box-shadow:0 3px 9px color-mix(in srgb,var(--accent) 16%,transparent)}.secondary{border:1px solid var(--line);background:white;color:var(--text)}.danger-btn{border:1px solid #f0dede;background:#fffafa;color:var(--danger);border-radius:12px;padding:12px 15px;font-size:12px;font-weight:500}.full{width:100%}
+.search{width:100%;padding:15px 18px;border:1px solid #e5e5ea;border-radius:14px;background:#ededf080;color:var(--text);font-size:14px;margin-bottom:16px}.search::placeholder{color:var(--muted)}input:focus,select:focus{outline:2px solid color-mix(in srgb,var(--accent) 70%,white);outline-offset:2px}.filter-row{display:flex;gap:6px;overflow:auto;margin-bottom:20px;padding:3px 1px 6px}.filter{border:0;border-radius:10px;background:transparent;padding:9px 13px;white-space:nowrap;color:var(--muted);font-size:12px}.filter.active{background:white;color:var(--text);box-shadow:0 1px 5px #0000000d;font-weight:600}
+.bottom-nav{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(calc(100% - 40px),380px);display:grid;grid-template-columns:1fr 72px 1fr;gap:8px;align-items:center;padding:10px 16px;border:1px solid #ffffffc9;border-radius:26px;background:rgba(250,250,252,.86);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);box-shadow:0 8px 40px #00000014,0 0 0 1px #00000004;z-index:10}.nav-btn{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0;font-size:10px;font-weight:500}.nav-btn.active{color:var(--accent)}.nav-add{justify-self:center;display:grid;place-items:center;width:46px;height:46px;border:0;border-radius:16px;background:var(--text);color:white;box-shadow:0 3px 8px #00000012}.nav-add svg{width:23px;height:23px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}.field.fullspan{grid-column:1/-1}.field label{font-size:11px;font-weight:600;color:var(--muted)}.field input,.field select{width:100%;min-width:0;padding:13px 12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--text);font-size:14px}.help{font-size:11px;line-height:1.7;color:var(--muted)}.modal-backdrop{display:none;position:fixed;inset:0;background:#14141a55;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:20px;z-index:20}.modal-backdrop.open{display:flex}.modal{width:min(100%,580px);max-height:90dvh;overflow:auto;background:var(--bg);border:1px solid #ffffffb0;border-radius:28px;padding:28px;box-shadow:0 24px 100px #00000025;animation:appear .22s ease-out}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}.modal-head h2{font-size:22px;letter-spacing:-.8px;font-weight:650;margin:0}.modal-close{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border:0;border-radius:50%;background:#e8e8ed;color:var(--muted);font-size:22px}.actions{display:flex;gap:10px;margin-top:14px}.actions>*{flex:1}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 0;border-bottom:1px solid var(--line)}.setting-row:first-child{padding-top:0}.setting-row:last-child{border-bottom:0;padding-bottom:0}.setting-title{font-size:14px;font-weight:600;letter-spacing:-.2px}.setting-desc{font-size:12px;line-height:1.6;color:var(--muted);margin-top:5px}.theme-options{display:flex;gap:14px;flex-wrap:wrap;padding-top:18px}.theme-swatch{width:30px;height:30px;border:3px solid white;outline:1px solid var(--line);border-radius:50%;padding:0}.theme-swatch.selected{outline:2px solid var(--text);outline-offset:2px}
+#alertsToggle{appearance:none;-webkit-appearance:none;flex-shrink:0;width:44px;height:27px;border-radius:20px;background:#d1d1d6;position:relative;transition:background .2s;cursor:pointer;margin:0}#alertsToggle:before{content:"";position:absolute;left:3px;top:3px;width:21px;height:21px;background:white;border-radius:50%;box-shadow:0 2px 4px #00000018;transition:transform .2s}#alertsToggle:checked{background:var(--success)}#alertsToggle:checked:before{transform:translateX(17px)}
+.toast{position:fixed;bottom:115px;left:50%;transform:translateX(-50%);display:none;max-width:calc(100% - 40px);background:#242428f2;color:white;padding:14px 20px;border-radius:16px;font-size:13px;line-height:1.5;box-shadow:0 8px 30px #00000015;text-align:center;z-index:50}.toast.show{display:block}.detail-top{display:flex;align-items:center;gap:14px;margin-bottom:24px}.detail-top .sub-icon{width:56px;height:56px;font-size:22px}.small-label{font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}.detail-value{font-size:30px;font-weight:600;letter-spacing:-1px;margin:8px 0 24px}
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.topbar{padding:24px 22px 30px}main{padding:0 22px 24px}.brand-title{font-size:15px}.hero{padding:26px}.stat{padding:20px}.lead{font-size:14px;margin-bottom:26px}.section-head{margin-top:26px}.modal-backdrop{align-items:flex-end;padding:10px}.modal{padding:22px;border-radius:26px;max-height:92dvh}.sub-row{padding:16px}.sub-meta{font-size:10px}.sub-price{font-size:14px}}
+@media(max-width:380px){main{padding-left:16px;padding-right:16px}.topbar{padding-left:16px;padding-right:16px}.form-grid{grid-template-columns:1fr}.field.fullspan{grid-column:auto}.stat{padding:18px}.stat-label{font-size:11px}.sub-row{gap:10px;padding:14px}.sub-icon{width:38px;height:38px}.sub-price{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
-    <div class="brand"><img class="logo-img" src="./logo-abonnementcheck.png" alt="AbonnementCheck-logo"><div><div class="brand-title">AbonnementCheck</div><div class="brand-sub">Grip op je vaste kosten</div></div></div>
-    <button class="icon-btn" id="settingsShortcut" aria-label="Instellingen" title="Instellingen">⚙</button>
+    <div class="brand"><img class="logo-img" src="./logo-abonnementcheck.png" alt="AbboCheck-logo"><div><div class="brand-title">AbboCheck</div><div class="brand-sub">Grip op je vaste kosten</div></div></div>
+    <button class="icon-btn" id="settingsShortcut" aria-label="Instellingen" title="Instellingen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l1 3 3 1v6l-3 1-1 3H9l-1-3-3-1V8l3-1Z"/><circle cx="12" cy="11" r="3"/></svg></button>
   </header>
   <main>
     <section class="page active" id="page-overview">
@@ -108,7 +60,7 @@ h1{font-size:29px;letter-spacing:-1.1px;line-height:1.12;margin:4px 2px 8px}
       <div id="allSubscriptions" class="sub-list"></div>
     </section>
     <section class="page" id="page-settings">
-      <div class="eyebrow">PERSONALISEREN</div><h1>Instellingen</h1><p class="lead">Pas AbonnementCheck aan jouw voorkeuren aan.</p>
+      <div class="eyebrow">PERSONALISEREN</div><h1>Instellingen</h1><p class="lead">Pas AbboCheck aan jouw voorkeuren aan.</p>
       <div class="card">
         <div class="setting-row"><div><div class="setting-title">Kleurthema</div><div class="setting-desc">Kies het accent van je app.</div></div></div>
         <div class="theme-options" id="themeOptions">
@@ -128,13 +80,13 @@ h1{font-size:29px;letter-spacing:-1.1px;line-height:1.12;margin:4px 2px 8px}
         <div class="actions"><button class="secondary" id="exportBtn">Exporteren</button><button class="secondary" id="importBtn">Importeren</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
         <div style="margin-top:12px"><button class="danger-btn full" id="clearDataBtn">Alle gegevens verwijderen</button></div>
       </div>
-      <p class="help" style="text-align:center;margin:20px 4px">AbonnementCheck · Versie 1.0.0<br>Dit prototype bewaart gegevens lokaal. Maak regelmatig een back-up.</p>
+      <p class="help" style="text-align:center;margin:20px 4px">AbboCheck · Versie 1.0.0<br>Dit prototype bewaart gegevens lokaal. Maak regelmatig een back-up.</p>
     </section>
   </main>
   <nav class="bottom-nav" aria-label="Hoofdnavigatie">
-    <button class="nav-btn active" data-page="overview"><span class="nav-icon">⌂</span><span>Overzicht</span></button>
-    <button class="nav-add" id="addButton" aria-label="Abonnement toevoegen">+</button>
-    <button class="nav-btn" data-page="subscriptions"><span class="nav-icon">▤</span><span>Abonnementen</span></button>
+    <button class="nav-btn active" data-page="overview"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H15v-6H9v6H3Z"/></svg></span><span>Overzicht</span></button>
+    <button class="nav-add" id="addButton" aria-label="Abonnement toevoegen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button class="nav-btn" data-page="subscriptions"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="4"/><path d="M8 8h8M8 12h8M8 16h4"/></svg></span><span>Abonnementen</span></button>
   </nav>
 </div>
 
@@ -242,9 +194,9 @@ h1{font-size:29px;letter-spacing:-1.1px;line-height:1.12;margin:4px 2px 8px}
   document.addEventListener("click",e=>{const open=e.target.closest("[data-open]");if(open){openDetail(open.dataset.open);return;}const add=e.target.closest('[data-action="add"]');if(add)openForm();});
   $("themeOptions").addEventListener("click",e=>{const b=e.target.closest("[data-theme]");if(!b)return;applyTheme(b.dataset.theme);save();});
   $("alertsToggle").addEventListener("change",e=>{state.alertsEnabled=e.target.checked;save();renderOverview();});
-  $("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`abonnementcheck-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast("Back-up geëxporteerd.");});
+  $("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`abbocheck-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast("Back-up geëxporteerd.");});
   $("importBtn").addEventListener("click",()=>$("importFile").click());
-  $("importFile").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!Array.isArray(parsed.subscriptions))throw new Error("Ongeldig back-upbestand");if(!confirm(`De back-up bevat ${parsed.subscriptions.length} abonnementen. Je huidige gegevens worden vervangen. Doorgaan?`))return;state={subscriptions:parsed.subscriptions,theme:THEMES[parsed.theme]?parsed.theme:"orange",alertsEnabled:parsed.alertsEnabled!==false};applyTheme(state.theme);save();render();$("alertsToggle").checked=state.alertsEnabled;toast("Back-up geïmporteerd.");}catch(err){toast("Importeren mislukt: kies een geldige AbonnementCheck-back-up.");}finally{e.target.value="";}});
+  $("importFile").addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(!Array.isArray(parsed.subscriptions))throw new Error("Ongeldig back-upbestand");if(!confirm(`De back-up bevat ${parsed.subscriptions.length} abonnementen. Je huidige gegevens worden vervangen. Doorgaan?`))return;state={subscriptions:parsed.subscriptions,theme:THEMES[parsed.theme]?parsed.theme:"orange",alertsEnabled:parsed.alertsEnabled!==false};applyTheme(state.theme);save();render();$("alertsToggle").checked=state.alertsEnabled;toast("Back-up geïmporteerd.");}catch(err){toast("Importeren mislukt: kies een geldige AbboCheck-back-up.");}finally{e.target.value="";}});
   $("clearDataBtn").addEventListener("click",()=>{if(!confirm("Alle abonnementen en instellingen op dit apparaat verwijderen? Dit kan niet ongedaan worden gemaakt."))return;state={subscriptions:[],theme:"orange",alertsEnabled:true};applyTheme("orange");save();$("alertsToggle").checked=true;render();toast("Lokale gegevens verwijderd.");});
   $("todayLabel").textContent=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
   load();render();
