@@ -6,6 +6,8 @@ Dit is de werkende webapp-code, niet de interactieve ontwerp-preview.
 - Abonnementen toevoegen, bekijken, bewerken en verwijderen
 - Kosten omgerekend naar maand- en jaartotalen (week, maand, kwartaal, jaar)
 - Volgende betaaldatum, startdatum en uiterste opzegdatum vastleggen
+- Optionele datum ‘Wijzigen of opzeggen vanaf’, met aftelling in dagen in het dashboard, de lijst en de details
+- Vanaf die datum verschijnt ‘Vanaf vandaag’ of ‘Je kunt nu wijzigen of opzeggen’; bestaande abonnementen zonder datum blijven ongewijzigd
 - Dashboardwaarschuwingen voor opzegdeadlines binnen 30 dagen
 - Zoeken en filteren
 - Vijf kleurthema's

@@ -28,6 +28,7 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}.field.fullspan{grid-column:1/-1}.field label{font-size:11px;font-weight:600;color:var(--muted)}.field input,.field select{width:100%;min-width:0;padding:13px 12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--text);font-size:14px}.help{font-size:11px;line-height:1.7;color:var(--muted)}.modal-backdrop{display:none;position:fixed;inset:0;background:#14141a55;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);align-items:center;justify-content:center;padding:20px;z-index:20}.modal-backdrop.open{display:flex}.modal{width:min(100%,580px);max-height:90dvh;overflow:auto;background:var(--bg);border:1px solid #ffffffb0;border-radius:28px;padding:28px;box-shadow:0 24px 100px #00000025;animation:appear .22s ease-out}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}.modal-head h2{font-size:22px;letter-spacing:-.8px;font-weight:650;margin:0}.modal-close{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border:0;border-radius:50%;background:#e8e8ed;color:var(--muted);font-size:22px}.actions{display:flex;gap:10px;margin-top:14px}.actions>*{flex:1}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 0;border-bottom:1px solid var(--line)}.setting-row:first-child{padding-top:0}.setting-row:last-child{border-bottom:0;padding-bottom:0}.setting-title{font-size:14px;font-weight:600;letter-spacing:-.2px}.setting-desc{font-size:12px;line-height:1.6;color:var(--muted);margin-top:5px}.theme-options{display:flex;gap:14px;flex-wrap:wrap;padding-top:18px}.theme-swatch{width:30px;height:30px;border:3px solid white;outline:1px solid var(--line);border-radius:50%;padding:0}.theme-swatch.selected{outline:2px solid var(--text);outline-offset:2px}
 #alertsToggle{appearance:none;-webkit-appearance:none;flex-shrink:0;width:44px;height:27px;border-radius:20px;background:#d1d1d6;position:relative;transition:background .2s;cursor:pointer;margin:0}#alertsToggle:before{content:"";position:absolute;left:3px;top:3px;width:21px;height:21px;background:white;border-radius:50%;box-shadow:0 2px 4px #00000018;transition:transform .2s}#alertsToggle:checked{background:var(--success)}#alertsToggle:checked:before{transform:translateX(17px)}
 .toast{position:fixed;bottom:115px;left:50%;transform:translateX(-50%);display:none;max-width:calc(100% - 40px);background:#242428f2;color:white;padding:14px 20px;border-radius:16px;font-size:13px;line-height:1.5;box-shadow:0 8px 30px #00000015;text-align:center;z-index:50}.toast.show{display:block}.detail-top{display:flex;align-items:center;gap:14px;margin-bottom:24px}.detail-top .sub-icon{width:56px;height:56px;font-size:22px}.small-label{font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}.detail-value{font-size:30px;font-weight:600;letter-spacing:-1px;margin:8px 0 24px}
+.change-status{color:var(--text);font-weight:550;line-height:1.6}#changeDatesSection>.help{margin:-4px 2px 14px}
 @keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){.topbar{padding:24px 22px 30px}main{padding:0 22px 24px}.brand-title{font-size:15px}.hero{padding:26px}.stat{padding:20px}.lead{font-size:14px;margin-bottom:26px}.section-head{margin-top:26px}.modal-backdrop{align-items:flex-end;padding:10px}.modal{padding:22px;border-radius:26px;max-height:92dvh}.sub-row{padding:16px}.sub-meta{font-size:10px}.sub-price{font-size:14px}}
 @media(max-width:380px){main{padding-left:16px;padding-right:16px}.topbar{padding-left:16px;padding-right:16px}.form-grid{grid-template-columns:1fr}.field.fullspan{grid-column:auto}.stat{padding:18px}.stat-label{font-size:11px}.sub-row{gap:10px;padding:14px}.sub-icon{width:38px;height:38px}.sub-price{font-size:13px}}
@@ -52,6 +53,11 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
       </div>
       <div class="section-head"><h2>Let hierop</h2><button class="text-btn" id="goSubscriptions">Alles bekijken</button></div>
       <div id="alertsList"></div>
+      <section id="changeDatesSection" hidden aria-labelledby="changeDatesTitle">
+        <div class="section-head"><h2 id="changeDatesTitle">Wijzigen of opzeggen</h2></div>
+        <p class="help">Vanaf de datum die je hebt vastgelegd. Controleer ook de opzegtermijn van je aanbieder.</p>
+        <div id="changeDatesList" class="sub-list"></div>
+      </section>
       <div class="section-head"><h2>Je abonnementen</h2><button class="text-btn" id="quickAdd">+ Toevoegen</button></div>
       <div id="recentList" class="sub-list"></div>
     </section>
@@ -104,11 +110,12 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
         <div class="field"><label for="subCategory">Categorie</label><select id="subCategory"><option>Entertainment</option><option>Software</option><option>Telefoon & internet</option><option>Sport & gezondheid</option><option>Vervoer</option><option>Wonen</option><option>Financiën</option><option>Overig</option></select></div>
         <div class="field"><label for="subStart">Startdatum</label><input id="subStart" type="date"></div>
         <div class="field"><label for="subRenewal">Volgende betaaldatum</label><input id="subRenewal" type="date"></div>
+        <div class="field fullspan"><label for="subChangeFrom">Wijzigen of opzeggen vanaf (optioneel)</label><input id="subChangeFrom" type="date" aria-describedby="subChangeFromHelp"><span class="help" id="subChangeFromHelp">Bijvoorbeeld de datum waarop je jaarcontract afloopt. We tonen hoeveel dagen je nog moet wachten. Laat leeg als er geen vaste datum is.</span></div>
         <div class="field"><label for="subDeadline">Uiterste opzegdatum</label><input id="subDeadline" type="date"></div>
         <div class="field"><label for="subStatus">Status</label><select id="subStatus"><option value="active">Actief</option><option value="paused">Gepauzeerd</option><option value="cancelled">Opgezegd</option></select></div>
         <div class="field fullspan"><label for="subNotes">Notities (optioneel)</label><input id="subNotes" maxlength="300" placeholder="Bijv. contractnummer of voorwaarden"></div>
       </div>
-      <p class="help">De opzegdatum is de laatste dag waarop je nog kunt opzeggen of wijzigen. Abonnementskosten worden omgerekend naar maand- en jaarkosten.</p>
+      <p class="help">‘Wijzigen of opzeggen vanaf’ is de eerste dag waarop dit volgens je contract kan. De uiterste opzegdatum is de laatste dag waarop je moet reageren. Abonnementskosten worden omgerekend naar maand- en jaarkosten.</p>
       <div class="actions"><button type="button" class="secondary" id="cancelForm">Annuleren</button><button type="submit" class="primary">Opslaan</button></div>
       <div id="editDeleteWrap" style="display:none;margin-top:12px"><button type="button" class="danger-btn full" id="deleteFromForm">Abonnement verwijderen</button></div>
     </form>
@@ -136,6 +143,21 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
   const todayISO = () => {const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
   const dateText = value => {if(!value)return "Niet ingesteld";const d=new Date(value+"T12:00:00");return d.toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"})};
   const daysUntil = value => {if(!value)return null;const a=new Date(todayISO()+"T00:00:00"),b=new Date(value+"T00:00:00");return Math.round((b-a)/86400000)};
+  function changeDays(value) {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const target = new Date(`${value}T00:00:00Z`);
+    if (!Number.isFinite(target.getTime()) || target.toISOString().slice(0,10) !== value) return null;
+    // Compare calendar dates, so daylight-saving changes never add or remove a day.
+    return Math.round((target - new Date(`${todayISO()}T00:00:00Z`)) / 86400000);
+  }
+  function changeLabel(s) {
+    const days = changeDays(s.changeFrom);
+    if (days === null) return "";
+    if (days > 1) return `Over ${days} dagen wijzigen of opzeggen`;
+    if (days === 1) return "Morgen wijzigen of opzeggen";
+    if (days === 0) return "Vanaf vandaag wijzigen of opzeggen";
+    return "Je kunt nu wijzigen of opzeggen";
+  }
   const active = s => s.status === "active";
   const monthlyCost = s => {const n=Number(s.amount)||0;switch(s.frequency){case"weekly":return n*52/12;case"quarterly":return n/3;case"yearly":return n/12;default:return n}};
   const freqLabel = f => ({monthly:"per maand",yearly:"per jaar",weekly:"per week",quarterly:"per kwartaal"}[f]||"");
@@ -146,9 +168,16 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
   function toast(message){const el=$("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2600);}
   function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function costLabel(s){return `${fmt(s.amount)} ${freqLabel(s.frequency)}`;}
-  function rowHTML(s){const m=monthlyCost(s);let meta=`${esc(s.category||"Overig")} · ${active(s)?"Actief":s.status==="paused"?"Gepauzeerd":"Opgezegd"}`;const d=daysUntil(s.deadline);if(active(s)&&d!==null&&d>=0&&d<=30)meta+=` · Opzeggen binnen ${d} d.`;return `<button class="sub-row" data-open="${esc(s.id)}" style="width:100%;text-align:left;color:inherit"><span class="sub-icon">${esc(iconFor(s.name))}</span><span class="sub-info"><span class="sub-name">${esc(s.name)}</span><span class="sub-meta">${meta}</span></span><span class="sub-price">${fmt(m)}<small>per maand</small></span></button>`;}
+  function rowHTML(s){const m=monthlyCost(s);let meta=`${esc(s.category||"Overig")} · ${active(s)?"Actief":s.status==="paused"?"Gepauzeerd":"Opgezegd"}`;const d=daysUntil(s.deadline);if(active(s)&&d!==null&&d>=0&&d<=30)meta+=` · Opzeggen binnen ${d} d.`;return `<button class="sub-row" data-open="${esc(s.id)}" style="width:100%;text-align:left;color:inherit"><span class="sub-icon">${esc(iconFor(s.name))}</span><span class="sub-info"><span class="sub-name">${esc(s.name)}</span><span class="sub-meta">${meta}</span>${active(s)&&changeLabel(s)?`<span class="sub-meta change-status">${esc(changeLabel(s))}</span>`:""}</span><span class="sub-price">${fmt(m)}<small>per maand</small></span></button>`;}
   function getDeadlines(){return state.subscriptions.filter(s=>active(s)&&s.deadline).map(s=>({...s,days:daysUntil(s.deadline)})).filter(s=>s.days!==null&&s.days>=0&&s.days<=30).sort((a,b)=>a.days-b.days);}
+  function renderChangeDates() {
+    const list = state.subscriptions.filter(s => active(s) && changeDays(s.changeFrom) !== null)
+      .sort((a,b) => changeDays(a.changeFrom) - changeDays(b.changeFrom));
+    $("changeDatesSection").hidden = list.length === 0;
+    $("changeDatesList").innerHTML = list.map(s => `<button class="sub-row" data-open="${esc(s.id)}" style="width:100%;text-align:left;color:inherit"><span class="sub-icon" aria-hidden="true">${esc(iconFor(s.name))}</span><span class="sub-info"><span class="sub-name">${esc(s.name)}</span><span class="sub-meta change-status">${esc(changeLabel(s))}</span><span class="sub-meta">Vanaf ${dateText(s.changeFrom)}</span></span></button>`).join("");
+  }
   function renderOverview(){
+    renderChangeDates();
     const list=state.subscriptions.filter(active);const m=list.reduce((sum,s)=>sum+monthlyCost(s),0);
     $("monthlyTotal").textContent=fmt(m);$("yearlyHero").textContent=`${fmt(m*12)} per jaar · ${list.length} actieve abonnementen`;
     $("activeCount").textContent=list.length;
@@ -174,18 +203,18 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
   function openForm(s=null){
     $("subscriptionForm").reset();$("subId").value=s?.id||"";$("formTitle").textContent=s?"Abonnement bewerken":"Abonnement toevoegen";
     $("subStatus").value=s?.status||"active";$("subFrequency").value=s?.frequency||"monthly";$("subCategory").value=s?.category||"Entertainment";
-    $("subName").value=s?.name||"";$("subAmount").value=s?.amount??"";$("subStart").value=s?.startDate||todayISO();$("subRenewal").value=s?.renewalDate||"";$("subDeadline").value=s?.deadline||"";$("subNotes").value=s?.notes||"";
+    $("subName").value=s?.name||"";$("subAmount").value=s?.amount??"";$("subStart").value=s?.startDate||todayISO();$("subRenewal").value=s?.renewalDate||"";$("subDeadline").value=s?.deadline||"";$("subChangeFrom").value=s?.changeFrom||"";$("subNotes").value=s?.notes||"";
     $("editDeleteWrap").style.display=s?"block":"none";$("formBackdrop").classList.add("open");setTimeout(()=>$("subName").focus(),100);
   }
   function closeForm(){$("formBackdrop").classList.remove("open");}
   function openDetail(id){const s=state.subscriptions.find(x=>x.id===id);if(!s)return;currentDetailId=id;$("detailTitle").textContent=s.name;
     const d=daysUntil(s.deadline);const deadlineText=!s.deadline?"Niet ingesteld":d<0?`${dateText(s.deadline)} (verstreken)`:d===0?`${dateText(s.deadline)} (vandaag)`:d<=30?`${dateText(s.deadline)} (over ${d} dagen)`:dateText(s.deadline);
-    $("detailContent").innerHTML=`<div class="detail-top"><div class="sub-icon">${esc(iconFor(s.name))}</div><div><div style="font-weight:800;font-size:17px">${esc(s.name)}</div><div class="sub-meta">${esc(s.category||"Overig")} · ${s.status==="active"?"Actief":s.status==="paused"?"Gepauzeerd":"Opgezegd"}</div></div></div><div class="small-label">Kosten per betaalperiode</div><div class="detail-value">${fmt(s.amount)} <span style="font-size:13px;color:var(--muted);font-weight:600">${freqLabel(s.frequency)}</span></div><div class="stat-grid"><div class="card stat"><div class="stat-label">Per maand</div><div class="stat-value" style="font-size:20px">${fmt(monthlyCost(s))}</div></div><div class="card stat"><div class="stat-label">Per jaar</div><div class="stat-value" style="font-size:20px">${fmt(monthlyCost(s)*12)}</div></div></div><div class="card"><div class="setting-row"><div><div class="setting-title">Volgende betaaldatum</div><div class="setting-desc">${dateText(s.renewalDate)}</div></div></div><div class="setting-row"><div><div class="setting-title">Uiterste opzegdatum</div><div class="setting-desc">${deadlineText}</div></div></div><div class="setting-row"><div><div class="setting-title">Startdatum</div><div class="setting-desc">${dateText(s.startDate)}</div></div></div>${s.notes?`<div class="setting-row"><div><div class="setting-title">Notities</div><div class="setting-desc">${esc(s.notes)}</div></div></div>`:""}</div>`;
+    $("detailContent").innerHTML=`<div class="detail-top"><div class="sub-icon">${esc(iconFor(s.name))}</div><div><div style="font-weight:800;font-size:17px">${esc(s.name)}</div><div class="sub-meta">${esc(s.category||"Overig")} · ${s.status==="active"?"Actief":s.status==="paused"?"Gepauzeerd":"Opgezegd"}</div></div></div><div class="small-label">Kosten per betaalperiode</div><div class="detail-value">${fmt(s.amount)} <span style="font-size:13px;color:var(--muted);font-weight:600">${freqLabel(s.frequency)}</span></div><div class="stat-grid"><div class="card stat"><div class="stat-label">Per maand</div><div class="stat-value" style="font-size:20px">${fmt(monthlyCost(s))}</div></div><div class="card stat"><div class="stat-label">Per jaar</div><div class="stat-value" style="font-size:20px">${fmt(monthlyCost(s)*12)}</div></div></div><div class="card"><div class="setting-row"><div><div class="setting-title">Volgende betaaldatum</div><div class="setting-desc">${dateText(s.renewalDate)}</div></div></div><div class="setting-row"><div><div class="setting-title">Wijzigen of opzeggen vanaf</div><div class="setting-desc">${changeDays(s.changeFrom)===null?"Niet ingesteld":`${dateText(s.changeFrom)} · ${esc(changeLabel(s))}`}</div></div></div><div class="setting-row"><div><div class="setting-title">Uiterste opzegdatum</div><div class="setting-desc">${deadlineText}</div></div></div><div class="setting-row"><div><div class="setting-title">Startdatum</div><div class="setting-desc">${dateText(s.startDate)}</div></div></div>${s.notes?`<div class="setting-row"><div><div class="setting-title">Notities</div><div class="setting-desc">${esc(s.notes)}</div></div></div>`:""}</div>`;
     $("detailBackdrop").classList.add("open");
   }
   function closeDetail(){$("detailBackdrop").classList.remove("open");}
   function deleteSubscription(id){const s=state.subscriptions.find(x=>x.id===id);if(!s)return;if(!confirm(`Weet je zeker dat je "${s.name}" wilt verwijderen?`))return;state.subscriptions=state.subscriptions.filter(x=>x.id!==id);save();render();closeForm();closeDetail();toast("Abonnement verwijderd.");}
-  $("subscriptionForm").addEventListener("submit",e=>{e.preventDefault();const id=$("subId").value||((crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now()));const existing=state.subscriptions.find(s=>s.id===id);const s={id,name:$("subName").value.trim(),amount:Number($("subAmount").value),frequency:$("subFrequency").value,category:$("subCategory").value,startDate:$("subStart").value,renewalDate:$("subRenewal").value,deadline:$("subDeadline").value,status:$("subStatus").value,notes:$("subNotes").value.trim(),createdAt:existing?.createdAt||new Date().toISOString()};if(!s.name||!Number.isFinite(s.amount)||s.amount<=0){toast("Vul een naam en geldig bedrag in.");return;}if(s.deadline&&s.startDate&&s.deadline<s.startDate){if(!confirm("De opzegdeadline ligt vóór de startdatum. Toch opslaan?"))return;}if(existing){state.subscriptions=state.subscriptions.map(x=>x.id===id?s:x);toast("Abonnement bijgewerkt.");}else{state.subscriptions.push(s);toast("Abonnement toegevoegd.");}save();render();closeForm();});
+  $("subscriptionForm").addEventListener("submit",e=>{e.preventDefault();const id=$("subId").value||((crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now()));const existing=state.subscriptions.find(s=>s.id===id);const s={id,name:$("subName").value.trim(),amount:Number($("subAmount").value),frequency:$("subFrequency").value,category:$("subCategory").value,startDate:$("subStart").value,renewalDate:$("subRenewal").value,deadline:$("subDeadline").value,changeFrom:$("subChangeFrom").value,status:$("subStatus").value,notes:$("subNotes").value.trim(),createdAt:existing?.createdAt||new Date().toISOString()};if(!s.name||!Number.isFinite(s.amount)||s.amount<=0){toast("Vul een naam en geldig bedrag in.");return;}if(s.deadline&&s.startDate&&s.deadline<s.startDate){if(!confirm("De opzegdeadline ligt vóór de startdatum. Toch opslaan?"))return;}if(existing){state.subscriptions=state.subscriptions.map(x=>x.id===id?s:x);toast("Abonnement bijgewerkt.");}else{state.subscriptions.push(s);toast("Abonnement toegevoegd.");}save();render();closeForm();});
   $("addButton").addEventListener("click",()=>openForm());$("quickAdd").addEventListener("click",()=>openForm());$("settingsShortcut").addEventListener("click",()=>navigate("settings"));$("goSubscriptions").addEventListener("click",()=>navigate("subscriptions"));
   $("closeForm").addEventListener("click",closeForm);$("cancelForm").addEventListener("click",closeForm);$("formBackdrop").addEventListener("click",e=>{if(e.target===$("formBackdrop"))closeForm();});
   $("closeDetail").addEventListener("click",closeDetail);$("detailCloseBtn").addEventListener("click",closeDetail);$("detailBackdrop").addEventListener("click",e=>{if(e.target===$("detailBackdrop"))closeDetail();});
@@ -202,6 +231,17 @@ main{padding:0 36px 28px}.page{display:none}.page.active{display:block;animation
   $("clearDataBtn").addEventListener("click",()=>{if(!confirm("Alle abonnementen en instellingen op dit apparaat verwijderen? Dit kan niet ongedaan worden gemaakt."))return;state={subscriptions:[],theme:"orange",alertsEnabled:true};applyTheme("orange");save();$("alertsToggle").checked=true;render();toast("Lokale gegevens verwijderd.");});
   $("todayLabel").textContent=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
   load();render();
+  let renderedDay = todayISO();
+  function refreshCalendarDay() {
+    const day = todayISO();
+    if (day === renderedDay) return;
+    renderedDay = day;
+    $("todayLabel").textContent = new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"}).toUpperCase();
+    render();
+    if ($("detailBackdrop").classList.contains("open")) openDetail(currentDetailId);
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshCalendarDay(); });
+  setInterval(refreshCalendarDay, 60000);
 })();
 </script>
 </body>
